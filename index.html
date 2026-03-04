@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>Calculadora Hipoteca — Finanzers</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik:wght@300;400;500;600&display=swap');
+:root{--black:#000;--orange:#FF6600;--white:#fff;--grey:#111;--grey2:#1a1a1a;--grey3:#2a2a2a;--muted:#666;--green:#00cc66;--red:#ff3333;--yellow:#ffcc00;--blue:#3399ff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:#000!important;}
+body{color:var(--white);font-family:'Rubik',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;min-height:100vh;overflow-x:hidden;-webkit-tap-highlight-color:transparent;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,102,0,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,102,0,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+.wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:36px 16px 80px;}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;padding-bottom:18px;border-bottom:1px solid var(--grey3);}
+.logo{font-family:'Rubik',-apple-system,BlinkMacSystemFont,sans-serif;font-size:34px;font-weight:900;font-style:italic;letter-spacing:-1px;color:var(--orange);}
+.badge{background:transparent;color:var(--muted);font-family:'Rubik',-apple-system,sans-serif;font-size:10px;font-weight:500;letter-spacing:1.5px;padding:4px 0;text-transform:uppercase;}
+.hero{margin-bottom:32px;}
+.hero h1{font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:clamp(34px,6vw,56px);font-weight:700;line-height:1;text-transform:uppercase;letter-spacing:-1px;margin-bottom:10px;}
+.hero h1 em{color:var(--orange);font-style:normal;}
+.hero p{color:var(--muted);font-size:14px;max-width:540px;line-height:1.6;}
+.hero p strong{color:var(--orange);font-weight:500;}
+.tabs{display:flex;gap:2px;margin-bottom:24px;flex-wrap:wrap;}
+.tab{padding:9px 18px;font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:1px solid var(--grey3);background:transparent;color:var(--muted);transition:all .15s;}
+.tab.active{background:var(--orange);border-color:var(--orange);color:#000;font-weight:700;}
+.tab:hover:not(.active){border-color:var(--orange);color:var(--white);}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:680px){.grid{grid-template-columns:1fr;}}
+.panel{background:var(--grey);border:1px solid var(--grey3);padding:22px;}
+.full{grid-column:1/-1;}
+.ptitle{font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.ptitle::before{content:'';width:3px;height:13px;background:var(--orange);display:block;flex-shrink:0;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.iw{position:relative;display:flex;align-items:center;}
+.iw input[type=number]{width:100%;background:var(--grey2);border:1px solid var(--grey3);color:var(--white);font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:22px;font-weight:500;padding:10px 42px 10px 14px;outline:none;transition:border-color .15s;-moz-appearance:textfield;}
+.iw input::-webkit-outer-spin-button,.iw input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.iw input:focus{border-color:var(--orange);}
+.unit{position:absolute;right:12px;font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:13px;color:var(--muted);pointer-events:none;}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--grey3);outline:none;border-radius:0;cursor:pointer;margin-top:7px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;background:var(--orange);border-radius:0;cursor:pointer;border:2px solid #000;}
+input[type=range]::-moz-range-thumb{width:15px;height:15px;background:var(--orange);border-radius:0;cursor:pointer;border:2px solid #000;}
+.sl-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:3px;letter-spacing:1px;}
+select{width:100%;background:var(--grey2);border:1px solid var(--grey3);color:var(--white);font-family:'Rubik',-apple-system,sans-serif;font-size:13px;padding:10px 14px;outline:none;cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath fill='%23FF6600' d='M5 7L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+select:focus{border-color:var(--orange);}
+select option{background:var(--grey2);}
+.checks{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+.chk{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.chk input[type=checkbox]{width:15px;height:15px;accent-color:var(--orange);cursor:pointer;flex-shrink:0;}
+.chk span{font-size:12px;color:var(--muted);}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:2px;margin-bottom:20px;}
+.rcard{background:var(--grey2);padding:16px;border-left:3px solid var(--grey3);}
+.rcard.ok{border-color:var(--green);}.rcard.warn{border-color:var(--yellow);}.rcard.bad{border-color:var(--red);}.rcard.info{border-color:var(--blue);}
+.rlabel{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;font-weight:500;}
+.rval{font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:26px;font-weight:700;line-height:1;color:var(--white);}
+.rval.green{color:var(--green);}.rval.yellow{color:var(--yellow);}.rval.red{color:var(--red);}.rval.blue{color:var(--blue);}
+.rsub{font-size:10px;color:var(--muted);margin-top:4px;}
+.verd{border:1px solid var(--grey3);padding:16px 20px;display:flex;align-items:flex-start;gap:14px;background:#000;}
+.verd-icon{font-size:26px;line-height:1;flex-shrink:0;}
+.verd-text h3{font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.verd-text p{font-size:12px;color:var(--muted);line-height:1.6;}
+.verd-text p strong{color:var(--white);font-weight:500;}
+.abar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px;}
+.abar{height:22px;background:var(--grey3);display:flex;overflow:hidden;margin-top:16px;}
+.abar-cap{background:var(--orange);height:100%;transition:width .5s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center;font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:10px;font-weight:600;color:#000;}
+.abar-int{height:100%;flex:1;display:flex;align-items:center;justify-content:center;font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:10px;color:var(--muted);}
+.dtitle{font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:10px;margin-top:18px;}
+.drow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--grey3);font-size:12px;}
+.drow:last-child{border-bottom:none;}
+.drow .k{color:var(--muted);flex:1;padding-right:10px;}
+.drow .v{font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:15px;font-weight:500;flex-shrink:0;}
+.v.pos{color:var(--green);}.v.neg{color:var(--red);}.v.warn{color:var(--yellow);}.v.inf{color:var(--blue);}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:2px;margin-bottom:16px;}
+.gcard{background:var(--grey2);padding:13px;border-top:2px solid var(--grey3);}
+.gcard.hi{border-top-color:var(--orange);}
+.gname{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.gval{font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:20px;font-weight:700;color:var(--white);}
+.gdet{font-size:10px;color:var(--muted);margin-top:2px;}
+.total-box{background:var(--grey2);padding:16px;border-top:3px solid var(--orange);margin-bottom:3px;}
+.total-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.total-val{font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:32px;font-weight:700;color:var(--orange);}
+.total-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+.coste-box{background:var(--grey2);padding:13px;border-top:2px solid var(--grey3);margin-bottom:3px;}
+.nota{background:var(--grey2);border:1px solid var(--grey3);border-left:3px solid var(--blue);padding:11px 14px;font-size:11px;color:var(--muted);line-height:1.6;margin-top:12px;}
+.nota strong{color:var(--blue);}
+.warn-nota{background:var(--grey2);border:1px solid var(--grey3);border-left:3px solid var(--yellow);padding:11px 14px;font-size:11px;color:var(--muted);line-height:1.6;margin-top:8px;}
+.warn-nota strong{color:var(--yellow);}
+.regla{background:var(--grey2);border:1px solid var(--grey3);border-left:3px solid var(--orange);padding:11px 14px;margin-top:14px;font-size:12px;color:var(--muted);line-height:1.6;}
+.regla strong{color:var(--orange);font-weight:600;}
+.sc{background:var(--grey2);padding:16px;border-left:4px solid transparent;margin-bottom:2px;}
+.sc.ok{border-color:var(--green);}.sc.warn{border-color:var(--yellow);}.sc.bad{border-color:var(--red);}
+.sc-title{font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.sc-val{font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:28px;font-weight:700;}
+.sc-val.green{color:var(--green);}.sc-val.yellow{color:var(--yellow);}.sc-val.red{color:var(--red);}
+.sc-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+.tip-w{position:relative;display:inline-block;cursor:help;color:var(--muted);font-size:10px;margin-left:3px;vertical-align:middle;}
+.tip-w .tipbox{visibility:hidden;background:var(--grey3);color:var(--white);font-size:11px;padding:8px 12px;position:absolute;bottom:130%;left:50%;transform:translateX(-50%);z-index:10;white-space:normal;text-align:left;letter-spacing:0;text-transform:none;font-family:'Rubik',sans-serif;font-weight:400;line-height:1.5;width:210px;border:1px solid var(--orange);}
+.tip-w:hover .tipbox{visibility:visible;}
+footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--grey3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+footer p{font-size:10px;color:var(--muted);letter-spacing:1px;}
+footer a{color:var(--orange);text-decoration:none;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.panel{animation:fadeUp .35s ease both;}
+@media(max-width:480px){.wrap{padding:18px 12px 60px;}.hero h1{font-size:34px;}.panel{padding:16px 12px;}.rval{font-size:22px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="logo">finanzers</div>
+  <div class="badge">herramienta gratuita</div>
+</header>
+
+<div class="hero">
+  <h1>¿Puedes pagar<br>esa <em>hipoteca</em>?</h1>
+  <p>Sin letra pequeña. Sin marketing bancario. Solo los números que <strong>tu banco no te va a poner en negrita</strong>.</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="setTab('calc')">Calculadora hipoteca</button>
+  <button class="tab" onclick="setTab('gastos')">Gastos de compra</button>
+  <button class="tab" onclick="setTab('puedo')">¿Cuánto puedo comprar?</button>
+</div>
+
+<!-- ===== TAB CALCULADORA ===== -->
+<div id="tab-calc">
+<div class="grid">
+
+  <div class="panel">
+    <div class="ptitle">La hipoteca</div>
+
+    <div class="field">
+      <label>Precio del inmueble</label>
+      <div class="iw"><input type="number" id="c-precio" value="250000" oninput="sv('c-precio',this.value);calc()"><span class="unit">€</span></div>
+      <input type="range" id="sl-c-precio" min="50000" max="1000000" step="5000" value="250000" oninput="sv2('c-precio',this.value);calc()">
+      <div class="sl-labels"><span>50K</span><span>1M</span></div>
+    </div>
+
+    <div class="field">
+      <label>Entrada inicial <span class="tip-w">ⓘ<span class="tipbox">El banco financia máx el 80% del valor de tasación. Necesitas al menos el 20% del precio + ~10% en gastos.</span></span></label>
+      <div class="iw"><input type="number" id="c-entrada" value="50000" oninput="sv('c-entrada',this.value);calc()"><span class="unit">€</span></div>
+      <input type="range" id="sl-c-entrada" min="0" max="500000" step="1000" value="50000" oninput="sv2('c-entrada',this.value);calc()">
+      <div class="sl-labels"><span>0€</span><span>500K</span></div>
+    </div>
+
+    <div class="field">
+      <label>Tipo interés anual (TIN)</label>
+      <div class="iw"><input type="number" id="c-tipo" value="3.5" step="0.1" oninput="sv('c-tipo',this.value);calc()"><span class="unit">%</span></div>
+      <input type="range" id="sl-c-tipo" min="0.5" max="8" step="0.1" value="3.5" oninput="sv2('c-tipo',this.value);calc()">
+      <div class="sl-labels"><span>0.5%</span><span>8%</span></div>
+    </div>
+
+    <div class="field">
+      <label>Plazo</label>
+      <div class="iw"><input type="number" id="c-plazo" value="30" oninput="sv('c-plazo',this.value);calc()"><span class="unit">años</span></div>
+      <input type="range" id="sl-c-plazo" min="5" max="40" step="1" value="30" oninput="sv2('c-plazo',this.value);calc()">
+      <div class="sl-labels"><span>5</span><span>40</span></div>
+    </div>
+
+    <div class="field">
+      <label>Valor de tasación <span class="tip-w">ⓘ<span class="tipbox">El banco financia el 80% del MENOR valor entre precio de compra y tasación. Si tasas por debajo del precio, el banco te da menos dinero del que necesitas.</span></span></label>
+      <div class="iw"><input type="number" id="c-tasacion" value="250000" oninput="sv('c-tasacion',this.value);calc()"><span class="unit">€</span></div>
+      <input type="range" id="sl-c-tasacion" min="50000" max="1000000" step="5000" value="250000" oninput="sv2('c-tasacion',this.value);calc()">
+      <div class="sl-labels"><span>50K</span><span>1M</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="ptitle">Tu economía</div>
+
+    <div class="field">
+      <label>Salario neto mensual</label>
+      <div class="iw"><input type="number" id="c-salario" value="2500" oninput="sv('c-salario',this.value);calc()"><span class="unit">€</span></div>
+      <input type="range" id="sl-c-salario" min="800" max="10000" step="100" value="2500" oninput="sv2('c-salario',this.value);calc()">
+      <div class="sl-labels"><span>800€</span><span>10K</span></div>
+    </div>
+
+    <div class="field">
+      <label>Gastos fijos mensuales <span class="tip-w">ⓘ<span class="tipbox">Coche, seguros, suscripciones, otros préstamos. Todo lo que pagas sí o sí.</span></span></label>
+      <div class="iw"><input type="number" id="c-gastos" value="600" oninput="sv('c-gastos',this.value);calc()"><span class="unit">€</span></div>
+      <input type="range" id="sl-c-gastos" min="0" max="5000" step="50" value="600" oninput="sv2('c-gastos',this.value);calc()">
+      <div class="sl-labels"><span>0€</span><span>5K</span></div>
+    </div>
+
+    <div class="field">
+      <label>Ahorros totales disponibles</label>
+      <div class="iw"><input type="number" id="c-ahorros" value="80000" oninput="sv('c-ahorros',this.value);calc()"><span class="unit">€</span></div>
+      <input type="range" id="sl-c-ahorros" min="0" max="500000" step="1000" value="80000" oninput="sv2('c-ahorros',this.value);calc()">
+      <div class="sl-labels"><span>0€</span><span>500K</span></div>
+    </div>
+
+    <div class="field">
+      <label>Comunidad autónoma</label>
+      <select id="c-ccaa" onchange="calc()">
+        <option value="AND">Andalucía</option><option value="ARA">Aragón</option><option value="AST">Asturias</option>
+        <option value="BAL">Baleares</option><option value="CAN">Canarias</option><option value="CNT">Cantabria</option>
+        <option value="CLM">Castilla-La Mancha</option><option value="CYL">Castilla y León</option><option value="CAT">Cataluña</option>
+        <option value="EXT">Extremadura</option><option value="GAL">Galicia</option><option value="MAD" selected>Madrid</option>
+        <option value="MUR">Murcia</option><option value="NAV">Navarra</option><option value="PVA">País Vasco</option>
+        <option value="RIO">La Rioja</option><option value="VAL">C. Valenciana</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Tipo de vivienda</label>
+      <select id="c-tipo-viv" onchange="calc()">
+        <option value="segunda">Segunda mano (ITP)</option>
+        <option value="nueva">Nueva (IVA 10% + AJD)</option>
+        <option value="vpo">VPO / Protección oficial</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Perfil comprador</label>
+      <div class="checks">
+        <label class="chk"><input type="checkbox" id="ch-joven" onchange="calc()"><span>Menor de 35 años — primera vivienda</span></label>
+        <label class="chk"><input type="checkbox" id="ch-familia" onchange="calc()"><span>Familia numerosa o monoparental</span></label>
+        <label class="chk"><input type="checkbox" id="ch-discap" onchange="calc()"><span>Discapacidad reconocida ≥ 33%</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTADOS -->
+  <div class="panel full">
+    <div class="ptitle">Resultado</div>
+    <div class="rgrid">
+      <div class="rcard" id="rc-cuota">
+        <div class="rlabel">Cuota mensual</div>
+        <div class="rval" id="r-cuota">—</div>
+        <div class="rsub" id="r-cuota-s"></div>
+      </div>
+      <div class="rcard" id="rc-esf">
+        <div class="rlabel">Esfuerzo financiero</div>
+        <div class="rval" id="r-esf">—</div>
+        <div class="rsub" id="r-esf-s"></div>
+      </div>
+      <div class="rcard" id="rc-lib">
+        <div class="rlabel">Dinero libre / mes</div>
+        <div class="rval" id="r-lib">—</div>
+        <div class="rsub" id="r-lib-s"></div>
+      </div>
+      <div class="rcard">
+        <div class="rlabel">Total pagado (vida hipoteca)</div>
+        <div class="rval" id="r-total">—</div>
+        <div class="rsub" id="r-total-s"></div>
+      </div>
+      <div class="rcard info">
+        <div class="rlabel">Máx. banco financia <span class="tip-w" style="text-transform:none;letter-spacing:0">ⓘ<span class="tipbox">80% del menor valor entre precio y tasación.</span></span></div>
+        <div class="rval blue" id="r-banco">—</div>
+        <div class="rsub" id="r-banco-s"></div>
+      </div>
+      <div class="rcard" id="rc-nec">
+        <div class="rlabel">Necesitas ahorrado</div>
+        <div class="rval" id="r-nec">—</div>
+        <div class="rsub" id="r-nec-s"></div>
+      </div>
+    </div>
+
+    <div class="verd" id="verd-box">
+      <div class="verd-icon" id="v-icon">⏳</div>
+      <div class="verd-text"><h3 id="v-tit">Calculando...</h3><p id="v-msg">Ajusta los parámetros.</p></div>
+    </div>
+
+    <div class="abar-labels" style="margin-top:18px"><span>Capital recuperado</span><span>Intereses regalados al banco</span></div>
+    <div class="abar"><div class="abar-cap" id="bar-cap"></div><div class="abar-int" id="bar-int"></div></div>
+
+    <div class="dtitle">Números reales</div>
+    <div class="drow"><span class="k">Capital financiado</span><span class="v" id="d-cap">—</span></div>
+    <div class="drow"><span class="k">Total intereses pagados</span><span class="v neg" id="d-int">—</span></div>
+    <div class="drow"><span class="k">Coste real (precio + intereses + gastos est.)</span><span class="v" id="d-coste">—</span></div>
+    <div class="drow"><span class="k">Ahorros que sobran tras la operación</span><span class="v" id="d-sobra">—</span></div>
+
+    <div class="regla"><strong>La regla del 30% que los bancos no quieren que sepas:</strong> una hipoteca saludable no debería superar el 30% de tu salario neto. El banco te dejará hasta el 35-40%… porque a ellos les interesa prestarte más, no que vivas bien.</div>
+  </div>
+</div>
+</div>
+
+<!-- ===== TAB GASTOS ===== -->
+<div id="tab-gastos" style="display:none">
+<div class="grid">
+
+  <div class="panel">
+    <div class="ptitle">Datos de la compra</div>
+
+    <div class="field">
+      <label>Precio del inmueble</label>
+      <div class="iw"><input type="number" id="g-precio" value="250000" oninput="sv('g-precio',this.value);calcG()"><span class="unit">€</span></div>
+      <input type="range" id="sl-g-precio" min="50000" max="1000000" step="5000" value="250000" oninput="sv2('g-precio',this.value);calcG()">
+      <div class="sl-labels"><span>50K</span><span>1M</span></div>
+    </div>
+
+    <div class="field">
+      <label>Comunidad autónoma</label>
+      <select id="g-ccaa" onchange="calcG()">
+        <option value="AND">Andalucía</option><option value="ARA">Aragón</option><option value="AST">Asturias</option>
+        <option value="BAL">Baleares</option><option value="CAN">Canarias</option><option value="CNT">Cantabria</option>
+        <option value="CLM">Castilla-La Mancha</option><option value="CYL">Castilla y León</option><option value="CAT">Cataluña</option>
+        <option value="EXT">Extremadura</option><option value="GAL">Galicia</option><option value="MAD" selected>Madrid</option>
+        <option value="MUR">Murcia</option><option value="NAV">Navarra</option><option value="PVA">País Vasco</option>
+        <option value="RIO">La Rioja</option><option value="VAL">C. Valenciana</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Tipo de vivienda</label>
+      <select id="g-tviv" onchange="calcG()">
+        <option value="segunda">Segunda mano → ITP</option>
+        <option value="nueva">Nueva → IVA 10% + AJD</option>
+        <option value="vpo">VPO / Protección oficial</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Perfil comprador (posibles reducciones ITP)</label>
+      <div class="checks">
+        <label class="chk"><input type="checkbox" id="g-joven" onchange="calcG()"><span>Menor de 35 años, primera vivienda habitual</span></label>
+        <label class="chk"><input type="checkbox" id="g-familia" onchange="calcG()"><span>Familia numerosa o monoparental</span></label>
+        <label class="chk"><input type="checkbox" id="g-discap" onchange="calcG()"><span>Discapacidad reconocida ≥ 33%</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>¿Contratas gestoría? <span class="tip-w">ⓘ<span class="tipbox">Obligatorio con hipoteca (el banco impone la suya). Opcional si compras al contado.</span></span></label>
+      <select id="g-gest" onchange="calcG()">
+        <option value="si">Sí — con hipoteca o por comodidad</option>
+        <option value="no">No — lo gestiono yo</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>¿Necesitas tasación? <span class="tip-w">ⓘ<span class="tipbox">Obligatoria si pides hipoteca. Válida 6 meses. Pídela independiente para poder negociar con varios bancos.</span></span></label>
+      <select id="g-tas-nec" onchange="calcG()">
+        <option value="si">Sí — pido hipoteca</option>
+        <option value="no">No — compro al contado</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Superficie (m²) <span class="tip-w">ⓘ<span class="tipbox">Afecta al coste de la tasación. A mayor m², mayor tarifa.</span></span></label>
+      <div class="iw"><input type="number" id="g-m2" value="90" oninput="sv('g-m2',this.value);calcG()"><span class="unit">m²</span></div>
+      <input type="range" id="sl-g-m2" min="30" max="500" step="5" value="90" oninput="sv2('g-m2',this.value);calcG()">
+      <div class="sl-labels"><span>30</span><span>500</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="ptitle">Desglose de gastos</div>
+
+    <div class="ggrid">
+      <div class="gcard hi">
+        <div class="gname">Impuesto (ITP/IVA)</div>
+        <div class="gval" id="g-imp">—</div>
+        <div class="gdet" id="g-imp-d"></div>
+      </div>
+      <div class="gcard">
+        <div class="gname">AJD <span class="tip-w">ⓘ<span class="tipbox">Actos Jurídicos Documentados. Solo en vivienda nueva. En hipotecas desde 2019 lo paga el banco.</span></span></div>
+        <div class="gval" id="g-ajd">—</div>
+        <div class="gdet" id="g-ajd-d"></div>
+      </div>
+      <div class="gcard">
+        <div class="gname">Notaría</div>
+        <div class="gval" id="g-not">—</div>
+        <div class="gdet" id="g-not-d">Escritura compraventa</div>
+      </div>
+      <div class="gcard">
+        <div class="gname">Registro propiedad</div>
+        <div class="gval" id="g-reg">—</div>
+        <div class="gdet">Inscripción escritura</div>
+      </div>
+      <div class="gcard">
+        <div class="gname">Gestoría</div>
+        <div class="gval" id="g-gest-v">—</div>
+        <div class="gdet" id="g-gest-d"></div>
+      </div>
+      <div class="gcard">
+        <div class="gname">Tasación</div>
+        <div class="gval" id="g-tas-v">—</div>
+        <div class="gdet" id="g-tas-d"></div>
+      </div>
+    </div>
+
+    <div class="total-box">
+      <div class="total-label">Total gastos adicionales</div>
+      <div class="total-val" id="g-total">—</div>
+      <div class="total-sub" id="g-total-s"></div>
+    </div>
+    <div class="coste-box">
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px">Coste total real de la operación</div>
+      <div style="font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-size:26px;font-weight:700" id="g-coste">—</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px">Precio de compra + todos los gastos</div>
+    </div>
+
+    <div class="nota" id="g-nota">Selecciona comunidad autónoma y perfil para ver los tipos aplicables.</div>
+    <div class="warn-nota"><strong>⚠ Importante:</strong> Los tipos reducidos de ITP requieren cumplir requisitos de renta, primera vivienda y uso habitual. Consulta siempre con un gestor antes de firmar.</div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===== TAB PUEDO ===== -->
+<div id="tab-puedo" style="display:none">
+<div class="grid">
+
+  <div class="panel">
+    <div class="ptitle">Tu situación</div>
+    <div class="field">
+      <label>Salario neto mensual</label>
+      <div class="iw"><input type="number" id="p-sal" value="2500" oninput="sv('p-sal',this.value);calcP()"><span class="unit">€</span></div>
+      <input type="range" id="sl-p-sal" min="800" max="10000" step="100" value="2500" oninput="sv2('p-sal',this.value);calcP()">
+      <div class="sl-labels"><span>800€</span><span>10K</span></div>
+    </div>
+    <div class="field">
+      <label>Ahorros disponibles</label>
+      <div class="iw"><input type="number" id="p-aho" value="60000" oninput="sv('p-aho',this.value);calcP()"><span class="unit">€</span></div>
+      <input type="range" id="sl-p-aho" min="0" max="400000" step="1000" value="60000" oninput="sv2('p-aho',this.value);calcP()">
+      <div class="sl-labels"><span>0€</span><span>400K</span></div>
+    </div>
+    <div class="field">
+      <label>Gastos fijos mensuales</label>
+      <div class="iw"><input type="number" id="p-gas" value="400" oninput="sv('p-gas',this.value);calcP()"><span class="unit">€</span></div>
+      <input type="range" id="sl-p-gas" min="0" max="4000" step="50" value="400" oninput="sv2('p-gas',this.value);calcP()">
+      <div class="sl-labels"><span>0€</span><span>4K</span></div>
+    </div>
+    <div class="field">
+      <label>Tipo de interés estimado</label>
+      <div class="iw"><input type="number" id="p-tip" value="3.5" step="0.1" oninput="sv('p-tip',this.value);calcP()"><span class="unit">%</span></div>
+      <input type="range" id="sl-p-tip" min="0.5" max="8" step="0.1" value="3.5" oninput="sv2('p-tip',this.value);calcP()">
+      <div class="sl-labels"><span>0.5%</span><span>8%</span></div>
+    </div>
+    <div class="field">
+      <label>Plazo</label>
+      <div class="iw"><input type="number" id="p-pla" value="30" oninput="sv('p-pla',this.value);calcP()"><span class="unit">años</span></div>
+      <input type="range" id="sl-p-pla" min="5" max="40" step="1" value="30" oninput="sv2('p-pla',this.value);calcP()">
+      <div class="sl-labels"><span>5</span><span>40</span></div>
+    </div>
+    <div class="field">
+      <label>% gastos de compra estimado <span class="tip-w">ⓘ<span class="tipbox">Incluye ITP/IVA + notaría + registro + gestoría. Usa la pestaña "Gastos de compra" para calcularlo exacto según tu CCAA.</span></span></label>
+      <div class="iw"><input type="number" id="p-pct" value="10" step="0.5" oninput="sv('p-pct',this.value);calcP()"><span class="unit">%</span></div>
+      <input type="range" id="sl-p-pct" min="6" max="16" step="0.5" value="10" oninput="sv2('p-pct',this.value);calcP()">
+      <div class="sl-labels"><span>6%</span><span>16%</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="ptitle">¿Cuánto puedes comprar?</div>
+    <div class="sc ok"><div class="sc-title">Conservador — 30% salario</div><div class="sc-val green" id="p-cons">—</div><div class="sc-sub" id="p-cons-s"></div></div>
+    <div class="sc warn"><div class="sc-title">Límite — 35% salario</div><div class="sc-val yellow" id="p-lim">—</div><div class="sc-sub" id="p-lim-s"></div></div>
+    <div class="sc bad" style="margin-bottom:16px"><div class="sc-title">Bancario — 40% salario</div><div class="sc-val red" id="p-banc">—</div><div class="sc-sub" id="p-banc-s"></div></div>
+
+    <div class="dtitle">Restricciones reales</div>
+    <div class="drow"><span class="k">Cuota máx. conservadora (30%)</span><span class="v pos" id="p-cmax">—</span></div>
+    <div class="drow"><span class="k">Entrada disponible (tras reservar gastos)</span><span class="v" id="p-ent">—</span></div>
+    <div class="drow"><span class="k">Límite por ahorros</span><span class="v" id="p-limaho">—</span></div>
+    <div class="drow"><span class="k">Tu precio real máximo</span><span class="v pos" id="p-pmax">—</span></div>
+
+    <div class="regla" id="p-regla">Ajusta los parámetros para ver tu capacidad real.</div>
+  </div>
+
+</div>
+</div>
+
+<footer>
+  <p>© 2025 <a href="https://finanzers.app">Finanzers</a> · Esto no es asesoramiento financiero. Es la verdad que los bancos evitan decirte.</p>
+  <p style="color:var(--orange);font-family:'Oswald','Arial Narrow',Arial,sans-serif;letter-spacing:1px;font-size:11px">ANTI-GURÚ · PRO-NÚMEROS</p>
+</footer>
+</div>
+
+<script>
+function _err(e){
+  var d=document.getElementById('_errdiv');
+  if(!d){
+    d=document.createElement('div');
+    d.id='_errdiv';
+    d.style.position='fixed';
+    d.style.bottom='0';
+    d.style.left='0';
+    d.style.right='0';
+    d.style.background='#c00';
+    d.style.color='#fff';
+    d.style.padding='10px';
+    d.style.fontSize='12px';
+    d.style.fontFamily='monospace';
+    d.style.zIndex='9999';
+    document.body.appendChild(d);
+  }
+  d.textContent='JS Error: '+(e.message||e);
+}
+
+// ---- HELPERS ----
+function sv(id,val){var s=document.getElementById('sl-'+id);if(s)s.value=val;}
+function sv2(id,val){var i=document.getElementById(id);if(i)i.value=val;}
+function g(id){return parseFloat(document.getElementById(id).value)||0;}
+function gs(id){return document.getElementById(id).value;}
+function gc(id){return document.getElementById(id).checked;}
+function fmt(n){
+  var neg=n<0;
+  var s=Math.round(Math.abs(n)).toString();
+  var r='';var c=0;
+  for(var i=s.length-1;i>=0;i--){
+    if(c>0&&c%3===0)r='.'+r;
+    r=s[i]+r;c++;
+  }
+  return (neg?'-':'')+r+'\u20AC';
+}
+function pct(n){return n.toFixed(1)+'%';}
+function cuota(cap,ta,pa){var r=ta/100/12,n=pa*12;if(r===0)return cap/n;return cap*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);}
+
+// ---- ITP DATA 2025 (fuentes: Idealista, hipotips.com, normativa CCAA) ----
+var ITP={
+  AND:{gen:7,jov:3.5,fam:3.5,disc:3.5,vpo:3.5,ajd:1.2,label:'Andaluc\u00EDa',nota:'3.5% para \u003C35a (primera vivienda, hasta 250K\u20AC), familia numerosa y discapacidad.'},
+  ARA:{gen:8,jov:5,fam:5,disc:5,vpo:5,ajd:1.5,label:'Arag\u00F3n',nota:'5% para \u003C35a, familia numerosa y discapacidad en vivienda habitual.'},
+  AST:{gen:8,jov:4,fam:4,disc:4,vpo:3,ajd:1.2,label:'Asturias',nota:'4% para \u003C35a, familia numerosa y discapacidad. M\u00E1x 150K\u20AC para tipo reducido.'},
+  BAL:{gen:8,jov:5,fam:5,disc:5,vpo:4,ajd:1.2,label:'Baleares',nota:'Tipo escalado 8-13% seg\u00FAn valor. 5% reducidos con requisitos de renta.'},
+  CAN:{gen:6.5,jov:4,fam:1,disc:1,vpo:0,ajd:1,label:'Canarias',nota:'IGIC 7% en vivienda nueva (no IVA). 1% familia numerosa y discapacidad con l\u00EDmites de renta.'},
+  CNT:{gen:10,jov:5,fam:5,disc:5,vpo:5,ajd:1.5,label:'Cantabria',nota:'5% para colectivos habituales. Tipo general 10%, de los m\u00E1s altos.'},
+  CLM:{gen:9,jov:5,fam:5,disc:5,vpo:4,ajd:1.5,label:'Castilla-La Mancha',nota:'6% primera vivienda hasta 180K\u20AC. 5% para \u003C36a, familia numerosa y discapacidad \u226565%.'},
+  CYL:{gen:8,jov:4,fam:4,disc:4,vpo:4,ajd:1.5,label:'Castilla y Le\u00F3n',nota:'4% para \u003C36a, familia numerosa y discapacidad. Renta familiar \u003C31.500\u20AC. 0.01% para j\u00F3venes en municipios \u003C10.000 hab.'},
+  CAT:{gen:10,jov:5,fam:5,disc:5,vpo:5,ajd:1.5,label:'Catalu\u00F1a',nota:'5% para \u226435a (ingresos \u003C36K\u20AC), familia numerosa y discapacidad. Tipos generales pueden llegar al 12-13% para inmuebles de gran valor (desde jun 2025).'},
+  EXT:{gen:8,jov:5,fam:5,disc:5,vpo:4,ajd:1.5,label:'Extremadura',nota:'Tipo escalado 8-11%. 7% vivienda habitual hasta 200K\u20AC con l\u00EDmite de ingresos.'},
+  GAL:{gen:10,jov:6,fam:6,disc:6,vpo:4,ajd:1.5,label:'Galicia',nota:'6% para \u003C36a primera vivienda habitual, familia numerosa y discapacidad.'},
+  MAD:{gen:6,jov:6,fam:4,disc:6,vpo:4,ajd:0.75,label:'Madrid',nota:'Tipo general 6%, el m\u00E1s bajo. 4% familia numerosa. Sin reducci\u00F3n especial para j\u00F3venes. AJD 0.75% (m\u00E1s bajo).'},
+  MUR:{gen:8,jov:5,fam:3.5,disc:3.5,vpo:3,ajd:1.5,label:'Murcia',nota:'3.5% familia numerosa y discapacidad. 5% \u003C35a primera vivienda con renta \u003C24K\u20AC.'},
+  NAV:{gen:6,jov:4,fam:4,disc:4,vpo:2.4,ajd:0.5,label:'Navarra',nota:'R\u00E9gimen foral. 4% vivienda habitual hasta 180K\u20AC con \u22652 hijos o condiciones.'},
+  PVA:{gen:4,jov:2.5,fam:2.5,disc:2.5,vpo:2,ajd:0.5,label:'Pa\u00EDs Vasco',nota:'R\u00E9gimen foral. Tipo m\u00E1s bajo de Espa\u00F1a. 2.5% vivienda habitual hasta 120m\u00B2. \u00C1lava 1.5% en zonas despoblaci\u00F3n.'},
+  RIO:{gen:7,jov:4,fam:5,disc:5,vpo:5,ajd:1,label:'La Rioja',nota:'4% para \u003C40a primera vivienda habitual (novedad Ley 1/2025). 3% en municipios en despoblaci\u00F3n.'},
+  VAL:{gen:10,jov:6,fam:3,disc:3,vpo:6,ajd:1.5,label:'C. Valenciana',nota:'6% \u003C35a primera vivienda. 3%/4% familia numerosa y discapacidad seg\u00FAn valor. Tipo general baja al 9% desde junio 2026.'},
+};
+
+function calcITP(precio,ccaa,tviv,jov,fam,disc){
+  var d=ITP[ccaa];if(!d)return{imp:0,ajd:0,label:'\u2014',nota:'\u2014',tipo:0};
+  if(tviv==='nueva'){
+    var iva=ccaa==='CAN'?0.07:0.10;
+    var ajd=d.ajd/100;
+    return{imp:precio*iva,ajd:precio*ajd,label:(ccaa==='CAN'?'IGIC 7%':'IVA 10%')+' + AJD '+d.ajd+'%',nota:d.nota,tipo:(iva+ajd)*100,esNueva:true};
+  }
+  if(tviv==='vpo'){return{imp:precio*d.vpo/100,ajd:0,label:'ITP VPO '+d.vpo+'%',nota:d.nota,tipo:d.vpo};}
+  var tipo=d.gen,label='ITP general '+d.gen+'%',red=false;
+  if(disc&&d.disc<tipo){tipo=d.disc;label='ITP discapacidad '+d.disc+'%';red=true;}
+  if(fam&&d.fam<tipo){tipo=d.fam;label='ITP familia numerosa '+d.fam+'%';red=true;}
+  if(jov&&d.jov<tipo){tipo=d.jov;label='ITP j\u00F3venes '+d.jov+'%';red=true;}
+  return{imp:precio*tipo/100,ajd:0,label,nota:d.nota,tipo,reduccion:red};
+}
+
+function calcNotaria(p){
+  if(p<=6010)return 90;if(p<=30050)return 90+(p-6010)*0.0045;
+  if(p<=60101)return 198+(p-30050)*0.00175;if(p<=150253)return 251+(p-60101)*0.00125;
+  if(p<=601012)return 363+(p-150253)*0.00075;return 701+(p-601012)*0.0003;
+}
+function calcRegistro(p){
+  if(p<=6010)return 24;if(p<=30050)return 24+(p-6010)*0.00175;
+  if(p<=60101)return 66+(p-30050)*0.00125;if(p<=150253)return 104+(p-60101)*0.00075;
+  if(p<=601012)return 172+(p-150253)*0.0005;return 397+(p-601012)*0.00025;
+}
+function calcTasacion(m2){
+  if(m2<=50)return 230;if(m2<=100)return 280;if(m2<=150)return 340;
+  if(m2<=200)return 400;if(m2<=300)return 480;return 550+(m2-300)*0.5;
+}
+
+// =================== CALC HIPOTECA ===================
+function calc(){
+  var precio=g('c-precio'),entrada=g('c-entrada'),tipo=g('c-tipo'),plazo=g('c-plazo');
+  var tasacion=g('c-tasacion'),salario=g('c-salario'),gastos=g('c-gastos'),ahorros=g('c-ahorros');
+  var ccaa=gs('c-ccaa'),tviv=gs('c-tipo-viv'),jov=gc('ch-joven'),fam=gc('ch-familia'),disc=gc('ch-discap');
+  var base=Math.min(precio,tasacion);
+  var maxBanco=base*0.8;
+  var capital=Math.min(precio-entrada,maxBanco);
+  if(capital<=0||plazo<=0||salario<=0)return;
+  var cta=cuota(capital,tipo,plazo);
+  var total=cta*plazo*12;
+  var ints=total-capital;
+  var esf=(cta/salario)*100;
+  var libre=salario-gastos-cta;
+  var itpD=calcITP(precio,ccaa,tviv,jov,fam,disc);
+  var not=Math.max(calcNotaria(precio),600);
+  var reg=Math.max(calcRegistro(precio),300);
+  var gEst=itpD.imp+itpD.ajd+not+reg+300+300;
+  var nec=entrada+gEst;
+  var sobra=ahorros-nec;
+
+  document.getElementById('r-cuota').textContent=fmt(cta);
+  document.getElementById('r-cuota-s').textContent=plazo+'a \u00B7 '+tipo+'% TIN';
+
+  var eEl=document.getElementById('r-esf');
+  if(esf<=30){eEl.className='rval green';document.getElementById('rc-esf').className='rcard ok';document.getElementById('r-esf-s').textContent='\u2713 Rango saludable';}
+  else if(esf<=35){eEl.className='rval yellow';document.getElementById('rc-esf').className='rcard warn';document.getElementById('r-esf-s').textContent='\u26A0 En el l\u00EDmite';}
+  else{eEl.className='rval red';document.getElementById('rc-esf').className='rcard bad';document.getElementById('r-esf-s').textContent='\u2717 Zona de peligro';}
+  eEl.textContent=pct(esf);
+
+  var lEl=document.getElementById('r-lib');
+  if(libre>=800){lEl.className='rval green';document.getElementById('rc-lib').className='rcard ok';document.getElementById('r-lib-s').textContent='Margen c\u00F3modo';}
+  else if(libre>=400){lEl.className='rval yellow';document.getElementById('rc-lib').className='rcard warn';document.getElementById('r-lib-s').textContent='Margen justo';}
+  else if(libre>=0){lEl.className='rval red';document.getElementById('rc-lib').className='rcard bad';document.getElementById('r-lib-s').textContent='\u00BFY los imprevistos?';}
+  else{lEl.className='rval red';document.getElementById('rc-lib').className='rcard bad';document.getElementById('r-lib-s').textContent='\u26A0 N\u00FAmeros negativos';}
+  lEl.textContent=fmt(libre);
+
+  document.getElementById('r-total').textContent=fmt(total);
+  document.getElementById('r-total-s').textContent=fmt(ints)+' en intereses';
+  document.getElementById('r-banco').textContent=fmt(maxBanco);
+  document.getElementById('r-banco-s').textContent = tasacion < precio ? 'Tasacion inferior al precio' : '80% de '+fmt(base);
+
+  var nEl=document.getElementById('r-nec');
+  if(ahorros>=nec){nEl.className='rval green';document.getElementById('rc-nec').className='rcard ok';document.getElementById('r-nec-s').textContent='\u2713 Sobran '+fmt(sobra);}
+  else{nEl.className='rval red';document.getElementById('rc-nec').className='rcard bad';document.getElementById('r-nec-s').textContent='\u2717 Faltan '+fmt(nec-ahorros);}
+  nEl.textContent=fmt(nec);
+
+  var pC=(capital/total*100).toFixed(0);
+  var bC=document.getElementById('bar-cap'),bI=document.getElementById('bar-int');
+  bC.style.width=pC+'%';bC.textContent=pC>20?pC+'% capital':'';bI.textContent=(100-pC)>20?(100-pC)+'% intereses':'';
+
+  document.getElementById('d-cap').textContent=fmt(capital);
+  document.getElementById('d-int').textContent=fmt(ints);
+  document.getElementById('d-coste').textContent=fmt(precio+ints+gEst);
+  var ds=document.getElementById('d-sobra');ds.textContent=fmt(sobra);ds.className='v '+(sobra>=0?'pos':'neg');
+
+  var ic,tt,ms;
+  if(ahorros<nec){ic='\uD83D\uDEAB';tt='No tienes suficiente ahorrado';ms='Necesitas \u003Cstrong\u003E'+fmt(nec)+'\u003C/strong\u003E (entrada '+fmt(entrada)+' + gastos ~'+fmt(gEst)+'). Tienes \u003Cstrong\u003E'+fmt(ahorros)+'\u003C/strong\u003E. Faltan \u003Cstrong\u003E'+fmt(nec-ahorros)+'\u003C/strong\u003E.';}
+  else if(libre<0){ic='\uD83D\uDD25';tt='Esta hipoteca te hunde';ms='Con la cuota de \u003Cstrong\u003E'+fmt(cta)+'\u003C/strong\u003E y tus gastos fijos acabas en \u003Cstrong\u003E'+fmt(libre)+'\u003C/strong\u003E/mes. Negativo.';}
+  else if(esf>40){ic='\u26A0\uFE0F';tt='Zona de peligro real';ms='El '+pct(esf)+' de tu salario va a la hipoteca. Un ERE, una enfermedad o un imprevisto y no puedes pagar. El banco te lo conceder\u00EDa igual.';}
+  else if(esf>35){ic='\uD83D\uDE2C';tt='Posible, pero al l\u00EDmite';ms='El '+pct(esf)+' est\u00E1 en el tope bancario. Sin colch\u00F3n para imprevistos. Libre al mes: \u003Cstrong\u003E'+fmt(libre)+'\u003C/strong\u003E.';}
+  else if(esf>30){ic='\uD83D\uDFE1';tt='Aceptable, no ideal';ms=pct(esf)+' de esfuerzo. Funciona pero con poco margen. Te quedan \u003Cstrong\u003E'+fmt(libre)+'\u003C/strong\u003E libres al mes.';}
+  else{ic='\u2705';tt='N\u00FAmeros sanos';ms=pct(esf)+' de esfuerzo y \u003Cstrong\u003E'+fmt(libre)+'\u003C/strong\u003E libres al mes. As\u00ED deber\u00EDa ser una hipoteca responsable.';}
+
+  document.getElementById('v-icon').textContent=ic;
+  document.getElementById('v-tit').textContent=tt;
+  document.getElementById('v-msg').innerHTML=ms;
+}
+
+// =================== CALC GASTOS ===================
+function calcG(){
+  var precio=g('g-precio'),ccaa=gs('g-ccaa'),tviv=gs('g-tviv');
+  var jov=gc('g-joven'),fam=gc('g-familia'),disc=gc('g-discap');
+  var conGest=gs('g-gest')==='si',conTas=gs('g-tas-nec')==='si',m2=g('g-m2');
+
+  var itpD=calcITP(precio,ccaa,tviv,jov,fam,disc);
+  var not=Math.max(calcNotaria(precio),600);
+  var reg=Math.max(calcRegistro(precio),300);
+  var gest=conGest?300:0;
+  var tas=conTas?calcTasacion(m2):0;
+  var total=itpD.imp+itpD.ajd+not+reg+gest+tas;
+
+  document.getElementById('g-imp').textContent=fmt(itpD.imp);
+  document.getElementById('g-imp-d').textContent=itpD.label+(itpD.reduccion?' \u2713 reducido':'');
+  document.getElementById('g-ajd').textContent=itpD.ajd>0?fmt(itpD.ajd):(tviv==='segunda'?'\u2014':'\u2014');
+  document.getElementById('g-ajd-d').textContent=itpD.ajd>0?'AJD '+(ITP[ccaa]?ITP[ccaa].ajd:0)+'%':(tviv==='segunda'?'No aplica':'No aplica');
+  document.getElementById('g-not').textContent=fmt(not);
+  document.getElementById('g-not-d').textContent=(not/precio*100).toFixed(2)+'% del precio \u00B7 arancel regulado';
+  document.getElementById('g-reg').textContent=fmt(reg);
+  document.getElementById('g-gest-v').textContent=conGest?fmt(gest):'\u2014';
+  document.getElementById('g-gest-d').textContent=conGest?'Tarifa orientativa':'Tr\u00E1mites propios';
+  document.getElementById('g-tas-v').textContent=conTas?fmt(tas):'\u2014';
+  document.getElementById('g-tas-d').textContent=conTas?m2+'m\u00B2 \u00B7 v\u00E1lida 6 meses':'Compra al contado';
+  document.getElementById('g-total').textContent=fmt(total);
+  document.getElementById('g-total-s').textContent=(total/precio*100).toFixed(1)+'% sobre el precio de compra';
+  document.getElementById('g-coste').textContent=fmt(precio+total);
+
+  var d=ITP[ccaa];
+  var nota='';
+  if(d){
+    nota='\u003Cstrong style="color:var(--blue)"\u003E'+d.label+'\u003C/strong\u003E \u00B7 ';
+    if(tviv==='segunda'){nota+='ITP general: \u003Cstrong\u003E'+d.gen+'%\u003C/strong\u003E. ';if(itpD.reduccion)nota+='\u003Cstrong style="color:var(--green)"\u003ETipo reducido aplicado: '+itpD.tipo+'%.\u003C/strong\u003E ';}
+    else if(tviv==='nueva'){nota+='Vivienda nueva: '+(ccaa==='CAN'?'IGIC 7%':'IVA 10%')+' + AJD '+d.ajd+'%.';}
+    else{nota+='VPO: ITP reducido '+d.vpo+'%.';}
+    nota+=' '+d.nota;
+  }
+  document.getElementById('g-nota').innerHTML=nota||'\u2014';
+}
+
+// =================== CALC PUEDO ===================
+function calcP(){
+  var sal=g('p-sal'),aho=g('p-aho'),gas=g('p-gas'),tip=g('p-tip'),pla=g('p-pla'),pctG=g('p-pct')/100;
+  if(!sal||!pla||!tip)return;
+  var r=tip/100/12,n=pla*12;
+  var factor=r===0?n:(Math.pow(1+r,n)-1)/(r*Math.pow(1+r,n));
+  var cCons=sal*0.30,cLim=sal*0.35,cBanc=sal*0.40;
+  var capCons=cCons*factor,capLim=cLim*factor,capBanc=cBanc*factor;
+
+  function precioPor(cap){
+    var prPorCap=cap/0.8;
+    var gastosNec=prPorCap*pctG;
+    var entNec=prPorCap*0.20;
+    if(aho>=entNec+gastosNec)return prPorCap;
+    var entMax=aho/(1+pctG/0.20);
+    return entMax/0.20;
+  }
+
+  var pC=precioPor(capCons),pL=precioPor(capLim),pB=precioPor(capBanc);
+  var entDisp=aho/(1+pctG/0.20);
+  var limAho=entDisp/0.20;
+  var pFinal=Math.min(pC,limAho);
+
+  document.getElementById('p-cons').textContent=fmt(pC);
+  document.getElementById('p-cons-s').textContent='Cuota ~'+fmt(cCons)+'/mes \u00B7 Libre: '+fmt(sal-gas-cCons);
+  document.getElementById('p-lim').textContent=fmt(pL);
+  document.getElementById('p-lim-s').textContent='Cuota ~'+fmt(cLim)+'/mes \u00B7 Libre: '+fmt(sal-gas-cLim);
+  document.getElementById('p-banc').textContent=fmt(pB);
+  document.getElementById('p-banc-s').textContent='Cuota ~'+fmt(cBanc)+'/mes \u00B7 Al l\u00EDmite del sistema';
+  document.getElementById('p-cmax').textContent=fmt(cCons);
+  document.getElementById('p-ent').textContent=fmt(entDisp);
+  document.getElementById('p-limaho').textContent=fmt(limAho);
+  document.getElementById('p-pmax').textContent=fmt(pFinal);
+
+  var regla=document.getElementById('p-regla');
+  if(aho<20000)regla.innerHTML='\u003Cstrong\u003E\u26A0 Ahorros muy bajos:\u003C/strong\u003E Con '+fmt(aho)+' apenas cubres los gastos de compra de un inmueble modesto.';
+  else if(sal<1500)regla.innerHTML='\u003Cstrong\u003E\u26A0 Salario ajustado:\u003C/strong\u003E Con '+fmt(sal)+'\u20AC netos, cualquier hipoteca significativa te deja sin margen.';
+  else regla.innerHTML='Con tu situaci\u00F3n el precio conservador m\u00E1ximo es \u003Cstrong\u003E'+fmt(pFinal)+'\u003C/strong\u003E. Ese es el n\u00FAmero que deber\u00EDas usar para buscar piso, no el que te d\u00E9 el banco.';
+}
+
+function setTab(t){
+  var _tabs=['calc','gastos','puedo'];for(var _i=0;_i<_tabs.length;_i++){document.getElementById('tab-'+_tabs[_i]).style.display=_tabs[_i]===t?'block':'none';}
+  var _tels=document.querySelectorAll('.tab');for(var _j=0;_j<_tels.length;_j++){_tels[_j].classList.toggle('active',['calc','gastos','puedo'][_j]===t);}
+}
+
+try{calc();}catch(e){_err(e);} try{calcG();}catch(e){_err(e);} try{calcP();}catch(e){_err(e);}
+</script>
+</body>
+</html>
